@@ -17,21 +17,21 @@ pipeline {
 
         stage('Build Maven Project') {
             steps {
-                sh 'mvn clean package'
+                bat 'mvn clean package'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t calculator-app .'
+                bat 'docker build -t calculator-app .'
             }
         }
 
         stage('Run Docker Container') {
             steps {
-                sh '''
-                docker stop calculator-container || true
-                docker rm calculator-container || true
+                bat '''
+                docker stop calculator-container || exit 0
+                docker rm calculator-container || exit 0
                 docker run -d -p 8080:8080 --name calculator-container calculator-app
                 '''
             }
@@ -40,7 +40,7 @@ pipeline {
 
     post {
         success {
-            echo '✅ Calculator App deployed successfully using Docker'
+            echo '✅ Calculator App deployed successfully using Docker on Windows'
         }
         failure {
             echo '❌ Jenkins Pipeline failed'
